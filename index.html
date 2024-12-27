@@ -3,210 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Správa Minibaru</title>
+    <title>Mini Bar Management</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            background-color: #f4f4f4;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h1, h2 {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
             color: #333;
         }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
         .form-group {
             margin-bottom: 15px;
         }
-        label {
+
+        .form-group label {
             display: block;
-            margin-bottom: 5px;
+            font-size: 16px;
             font-weight: bold;
+            margin-bottom: 8px;
         }
-        input, select, button {
+
+        .form-group input {
             width: 100%;
+            font-size: 16px;
             padding: 10px;
-            margin-top: 5px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
         }
+
         button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .output {
-            margin-top: 20px;
+            display: block;
+            width: 100%;
+            max-width: 320px;
+            margin: 20px auto;
             padding: 15px;
-            border: 1px solid #ddd;
-            background: #fff;
-            border-radius: 4px;
+            background: linear-gradient(135deg, #3498db, #2ecc71);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
         }
-        .output p {
-            margin: 10px 0;
+
+        button:hover {
+            background: linear-gradient(135deg, #2980b9, #27ae60);
+        }
+
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .form-group label, .form-group input {
+                font-size: 14px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 12px;
+            }
+        }
+
+        /* Different colors for each villa */
+        .villa-little-castle {
+            background-color: #f0f8ff;
+        }
+
+        .villa-amazing-pool {
+            background-color: #e6e6fa;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Správa Minibaru</h1>
-
-        <h2>Výběr vily</h2>
-        <div class="form-group">
-            <label for="vila">Vyberte vilu:</label>
-            <select id="vila">
-                <option value="Českomalínská">Českomalínská</option>
-                <option value="Na Marně">Na Marně</option>
-                <option value="Ve svahu">Ve svahu</option>
+    <div class="container villa-little-castle">
+        <h1>Inventář Mini Baru - The little castle</h1>
+        <div>
+            <label for="currency">Měna:</label>
+            <select id="currency">
+                <option value="CZK">CZK</option>
+                <option value="EUR">EUR</option>
             </select>
         </div>
+        <div id="items"></div>
+        <button onclick="generateInvoice()">Generovat fakturu</button>
+    </div>
 
-        <h2>Výběr položek</h2>
-        <div id="items">
-            <!-- Položky v Kč -->
-            <div class="form-group"><label for="budvar">Budvar (59 Kč):</label><input type="number" id="budvar" min="0" value="0"></div>
-            <div class="form-group"><label for="malibu">Malibu (99 Kč):</label><input type="number" id="malibu" min="0" value="0"></div>
-            <div class="form-group"><label for="jackCola">Jack s colou (99 Kč):</label><input type="number" id="jackCola" min="0" value="0"></div>
-            <div class="form-group"><label for="mule">Moscow Mule (99 Kč):</label><input type="number" id="mule" min="0" value="0"></div>
-            <div class="form-group"><label for="ginTonic">Gin-Tonic (99 Kč):</label><input type="number" id="ginTonic" min="0" value="0"></div>
-            <div class="form-group"><label for="mojito">Mojito (99 Kč):</label><input type="number" id="mojito" min="0" value="0"></div>
-            <div class="form-group"><label for="coke">Coca-Cola (32 Kč):</label><input type="number" id="coke" min="0" value="0"></div>
-            <div class="form-group"><label for="sprite">Sprite (32 Kč):</label><input type="number" id="sprite" min="0" value="0"></div>
-            <div class="form-group"><label for="redBull">Red Bull (59 Kč):</label><input type="number" id="redBull" min="0" value="0"></div>
-            <div class="form-group"><label for="prosecco">Prosecco (390 Kč):</label><input type="number" id="prosecco" min="0" value="0"></div>
-
-            <!-- Položky v € -->
-            <div class="form-group"><label for="pivo30">Pivo sud 30 l (125 €):</label><input type="number" id="pivo30" min="0" value="0"></div>
-            <div class="form-group"><label for="pivo50">Pivo sud 50 l (175 €):</label><input type="number" id="pivo50" min="0" value="0"></div>
-            <div class="form-group"><label for="wellness">Wellness (zadejte cenu v €):</label><input type="number" id="wellness" min="0" value="0"></div>
-            <div class="form-group"><label for="plyn">Plyn (12 €):</label><input type="number" id="plyn" min="0" value="0"></div>
+    <div class="container villa-amazing-pool">
+        <h1>Inventář Mini Baru - Amazing pool</h1>
+        <div>
+            <label for="currency">Měna:</label>
+            <select id="currency">
+                <option value="CZK">CZK</option>
+                <option value="EUR">EUR</option>
+            </select>
         </div>
-
-        <h2>Další údaje</h2>
-        <div class="form-group">
-            <label for="guests">Počet hostů:</label>
-            <input type="number" id="guests" min="1" value="1">
-        </div>
-        <div class="form-group">
-            <label for="nights">Počet nocí:</label>
-            <input type="number" id="nights" min="1" value="1">
-        </div>
-
-        <div class="form-group">
-            <label for="exchangeRate">Kurz CZK/EUR:</label>
-            <input type="number" id="exchangeRate" step="0.1" min="20" value="24.5">
-        </div>
-
-        <div class="form-group">
-            <label>
-                <input type="checkbox" id="sleva"> Sleva 10 % (na vše kromě citi tax)
-            </label>
-        </div>
-
-        <button onclick="calculate()">Vypočítat</button>
-
-        <div id="output" class="output"></div>
+        <div id="items"></div>
+        <button onclick="generateInvoice()">Generovat fakturu</button>
     </div>
 
     <script>
-        function calculate() {
-            // Selected villa
-            const vila = document.getElementById("vila").value;
-            const date = new Date().toLocaleDateString("cs-CZ");
-            const exchangeRate = parseFloat(document.getElementById("exchangeRate").value) || 24.5;
+        const API_URL = 'http://localhost:3000';
+        const VILLAS = {
+            'The little castle': [
+                { name: 'Budvar', priceCZK: 59, priceEUR: 2.4 },
+                { name: 'Malibu', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Jack s colou', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Moscow Mule', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Gin-Tonic', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Mojito', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Prosecco', priceCZK: 390, priceEUR: 16.0 },
+                { name: 'Pivo sud 30 l', priceCZK: 3125, priceEUR: 125 },
+                { name: 'Pivo sud 50 l', priceCZK: 4375, priceEUR: 175 },
+                { name: 'Plyn', priceCZK: 300, priceEUR: 12 },
+                { name: 'Wellness', priceCZK: 0, priceEUR: 0 } // Custom price
+            ],
+            'Amazing pool': [
+                { name: 'Budvar', priceCZK: 59, priceEUR: 2.4 },
+                { name: 'Malibu', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Jack s colou', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Moscow Mule', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Gin-Tonic', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Mojito', priceCZK: 99, priceEUR: 4.0 },
+                { name: 'Coca-Cola', priceCZK: 32, priceEUR: 1.3 },
+                { name: 'Sprite', priceCZK: 32, priceEUR: 1.3 },
+                { name: 'Red Bull', priceCZK: 59, priceEUR: 2.4 },
+                { name: 'Prosecco', priceCZK: 390, priceEUR: 16.0 },
+                { name: 'Pivo sud 30 l', priceCZK: 3125, priceEUR: 125 },
+                { name: 'Pivo sud 50 l', priceCZK: 4375, priceEUR: 175 },
+                { name: 'Plyn', priceCZK: 300, priceEUR: 12 },
+                { name: 'Wellness', priceCZK: 0, priceEUR: 0 } // Custom price
+            ]
+        };
 
-            // Price lists
-            const pricesCZK = {
-                budvar: 59, 
-                malibu: 99, 
-                jackCola: 99, 
-                mule: 99, 
-                ginTonic: 99, 
-                mojito: 99,
-                coke: 32, 
-                sprite: 32, 
-                redBull: 59, 
-                prosecco: 390
-            };
-            
-            const pricesEUR = {
-                pivo30: 125, 
-                pivo50: 175, 
-                plyn: 12
-            };
+        // Load inventory for both villas
+        function loadInventory() {
+            Object.keys(VILLAS).forEach(villa => {
+                const items = VILLAS[villa];
+                const container = document.querySelector(`.container.villa-${villa.toLowerCase().replace(/ /g, '-')}`);
+                const itemsContainer = container.querySelector('#items');
+                itemsContainer.innerHTML = '';
 
-            // Get input values
-            const items = {
-                budvar: parseInt(document.getElementById("budvar").value) || 0,
-                malibu: parseInt(document.getElementById("malibu").value) || 0,
-                jackCola: parseInt(document.getElementById("jackCola").value) || 0,
-                mule: parseInt(document.getElementById("mule").value) || 0,
-                ginTonic: parseInt(document.getElementById("ginTonic").value) || 0,
-                mojito: parseInt(document.getElementById("mojito").value) || 0,
-                coke: parseInt(document.getElementById("coke").value) || 0,
-                sprite: parseInt(document.getElementById("sprite").value) || 0,
-                redBull: parseInt(document.getElementById("redBull").value) || 0,
-                prosecco: parseInt(document.getElementById("prosecco").value) || 0,
-                pivo30: parseInt(document.getElementById("pivo30").value) || 0,
-                pivo50: parseInt(document.getElementById("pivo50").value) || 0,
-                wellness: parseFloat(document.getElementById("wellness").value) || 0,
-                plyn: parseInt(document.getElementById("plyn").value) || 0
-            };
+                items.forEach((item, index) => {
+                    const formGroup = document.createElement('div');
+                    formGroup.classList.add('form-group');
 
-            const guests = parseInt(document.getElementById("guests").value) || 1;
-            const nights = parseInt(document.getElementById("nights").value) || 1;
-            const sleva = document.getElementById("sleva").checked;
+                    const label = document.createElement('label');
+                    label.textContent = `${item.name} (Cena: ${item.priceCZK} Kč / ${item.priceEUR} €)`;
 
-            // Calculations
-            let totalCZK = 0, totalEUR = 0;
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.min = '0';
+                    input.placeholder = 'Zadejte počet';
+                    input.id = `item-${villa}-${index}`;
 
-            // Calculate Czech prices
-            Object.keys(pricesCZK).forEach(key => {
-                totalCZK += items[key] * pricesCZK[key];
+                    formGroup.appendChild(label);
+                    formGroup.appendChild(input);
+                    itemsContainer.appendChild(formGroup);
+                });
+            });
+        }
+
+        // Generate invoice
+        async function generateInvoice() {
+            const currency = document.querySelector('#currency').value;
+            let invoiceDetails = '';
+            let total = 0;
+
+            Object.keys(VILLAS).forEach(villa => {
+                const items = VILLAS[villa];
+                const container = document.querySelector(`.container.villa-${villa.toLowerCase().replace(/ /g, '-')}`);
+                const inputs = container.querySelectorAll('#items input');
+
+                inputs.forEach((input, index) => {
+                    const quantity = parseInt(input.value, 10);
+                    if (quantity > 0 && !Number.isNaN(quantity)) {
+                        const item = items[index];
+                        const price = currency === 'CZK' ? item.priceCZK : item.priceEUR;
+                        invoiceDetails += `${quantity}x ${item.name}: ${price * quantity} ${currency}<br>`;
+                        total += price * quantity;
+                    }
+                });
             });
 
-            // Calculate Euro prices
-            totalEUR += 
-                items.pivo30 * pricesEUR.pivo30 + 
-                items.pivo50 * pricesEUR.pivo50 + 
-                items.plyn * pricesEUR.plyn + 
-                items.wellness;
+            const guests = parseInt(prompt('Zadejte počet hostů:'), 10);
+            const nights = parseInt(prompt('Zadejte počet nocí:'), 10);
+            const cityTax = guests * nights * 2;
 
-            // City tax calculation in Euros
-            const cityTaxEUR = guests * nights * 2;
-            const cityTaxCZK = cityTaxEUR * exchangeRate;
+            total += cityTax;
 
-            // Apply discount if checked
-            if (sleva) {
-                totalCZK *= 0.9;
-                totalEUR *= 0.9;
-            }
-
-            // Detailed output
-            const outputDiv = document.getElementById("output");
-            outputDiv.innerHTML = `
-                <h2>Výsledky</h2>
-                <p><strong>Vila:</strong> ${vila}</p>
-                <p><strong>Datum:</strong> ${date}</p>
-                <p><strong>Celkem v CZK:</strong> ${totalCZK.toFixed(2)} Kč</p>
-                <p><strong>Celkem v EUR:</strong> ${totalEUR.toFixed(2)} €</p>
-                <p><strong>City Tax v EUR:</strong> ${cityTaxEUR.toFixed(2)} €</p>
-                <p><strong>City Tax v CZK:</strong> ${cityTaxCZK.toFixed(2)} Kč</p>
-                <p><strong>Celkový součet v CZK:</strong> ${(totalCZK + cityTaxCZK).toFixed(2)} Kč</p>
-                <p><strong>Celkový součet v EUR:</strong> ${(totalEUR + cityTaxEUR).toFixed(2)} €</p>
-            `;
+            alert(`Faktura:\n${invoiceDetails}\nCity Tax: ${cityTax} €\nCelkem: ${total} ${currency}`);
+            loadInventory();
         }
+
+        window.onload = loadInventory;
     </script>
 </body>
 </html>
